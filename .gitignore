@@ -14,3 +14,14 @@ Thumbs.db
 
 # Logs
 npm-debug.log
+
+# production
+/build
+/dist
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# eslint
+.eslintcache
