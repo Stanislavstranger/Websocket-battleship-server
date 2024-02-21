@@ -1,13 +1,12 @@
 import WebSocket from 'ws';
-import {
-	handleAddUserToRoom,
-	handlePlayerRegistration,
-	handleRoomCreation,
-} from '../controllers/playerController';
+import 'colors';
+import handlePlayerRegistration from '../controllers/playerController';
 import { players } from '../services/userService';
+import handleRoomCreation from '../controllers/roomController';
+import handleGameCreation from '../controllers/gameController';
 
 export const handleWebSocketConnection = (ws: WebSocket): void => {
-	console.log('New WebSocket connection');
+	console.log('👉👈 New WebSocket connection'.green.inverse);
 
 	ws.on('message', (message: string) => {
 		try {
@@ -22,18 +21,18 @@ export const handleWebSocketConnection = (ws: WebSocket): void => {
 					handleRoomCreation(parsedMessage, ws);
 					break;
 				case 'add_user_to_room':
-					handleAddUserToRoom(parsedMessage, ws);
+					handleGameCreation(parsedMessage, ws);
 					break;
 				default:
-					console.log('Unknown command type');
+					console.log('❗ Unknown command type'.red.bgWhite);
 					break;
 			}
 		} catch (error) {
-			console.error('Error parsing message:', error);
+			console.error('❗ Error parsing message:'.red.bgWhite, error);
 		}
 	});
 
 	ws.on('close', () => {
-		console.log('WebSocket connection closed');
+		console.log('👈👉 WebSocket connection closed'.red.inverse);
 	});
 };

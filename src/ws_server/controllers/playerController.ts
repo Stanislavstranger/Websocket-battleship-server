@@ -3,7 +3,7 @@ import { validatePlayerRegistration } from '../utils/validationUtils';
 import { registerPlayer } from '../services/userService';
 import { Player } from '../models/Player';
 
-export const handlePlayerRegistration = (data: Player, ws: WebSocket): void => {
+const handlePlayerRegistration = (data: Player, ws: WebSocket): void => {
 	const validationResult = validatePlayerRegistration(data);
 	if (!validationResult) {
 		return;
@@ -25,19 +25,4 @@ export const handlePlayerRegistration = (data: Player, ws: WebSocket): void => {
 	ws.send(response);
 };
 
-export const handleRoomCreation = (data: Player, ws: WebSocket): void => {
-	const responseData = {
-		type: 'create_game',
-		data: JSON.stringify({
-			idGame: 1,
-			idPlayer: 0,
-		}),
-		id: 0,
-	};
-	const response = JSON.stringify(responseData);
-	ws.send(response);
-};
-
-export const handleAddUserToRoom = (data: Player, ws: WebSocket): void => {
-	console.log(data);
-};
+export default handlePlayerRegistration;

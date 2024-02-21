@@ -10,5 +10,5 @@ const wss = new WebSocket.Server({ port: Number(PORT) });
 wss.on('connection', handleWebSocketConnection);
 
 wss.on('listening', () => {
-	console.log(`⚙️  BACKEND: Server running on the http://localhost:${PORT}`.green.inverse);
+	console.log(`⚙️  BACKEND: Server running on the http://localhost:${PORT}`.yellow.inverse);
 });
