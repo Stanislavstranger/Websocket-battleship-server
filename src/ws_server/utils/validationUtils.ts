@@ -1,4 +1,4 @@
-import { Player } from '../models/Player';
+import { Player } from '../models/models';
 import { players } from '../services/userService';
 
 export const validatePlayerRegistration = (data: Player): boolean => {

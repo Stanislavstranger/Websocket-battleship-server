@@ -1,5 +1,5 @@
 import WebSocket from 'ws';
-import { Player } from '../models/Player';
+import { Player } from '../models/models';
 
 const handleGameCreation = (data: Player, ws: WebSocket): void => {
 	const responseData = {

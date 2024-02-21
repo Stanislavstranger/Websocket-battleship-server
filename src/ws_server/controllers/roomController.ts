@@ -1,17 +1,24 @@
 import WebSocket from 'ws';
-import { Player } from '../models/Player';
+import { RegisteredPlayer } from '../models/models';
 
-const handleRoomCreation = (data: Player, ws: WebSocket): void => {
+const handleRoomUpdate = (data: RegisteredPlayer, ws: WebSocket): void => {
 	const responseData = {
-		type: 'create_game',
-		data: JSON.stringify({
-			idGame: 1,
-			idPlayer: 0,
-		}),
+		type: 'update_room',
+		data: JSON.stringify([
+			{
+				roomId: 1,
+				roomUsers: [
+					{
+						name: data.name,
+						index: data.id,
+					},
+				],
+			},
+		]),
 		id: 0,
 	};
 	const response = JSON.stringify(responseData);
 	ws.send(response);
 };
 
-export default handleRoomCreation;
+export default handleRoomUpdate;
