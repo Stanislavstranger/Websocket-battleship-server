@@ -1,10 +1,25 @@
-import { RegisteredPlayer } from '../models/models';
-import { v4 as uuidv4 } from 'uuid';
+import db from '../data/db';
+import { Player, Players, Rooms } from '../models/models';
 
-export const players: RegisteredPlayer[] = [];
+export const createPlayer = (name: string, password: string): Players => {
+	const player = { id: db.players.length + 1, name, password };
+	db.players.push(player);
+	return player;
+};
 
-export const registerPlayer = (name: string, password: string): RegisteredPlayer => {
-	const newPlayer: RegisteredPlayer = { name, password, id: +uuidv4() };
-	players.push(newPlayer);
-	return newPlayer;
+export const getPlayerByNameAndPassword = (name: string, password: string): Player | undefined => {
+	return db.players.find((player) => player.name === name && player.password === password);
+};
+
+export const createRoom = (playerId: number, gameId: number): Rooms => {
+	const room = { id: db.rooms.length + 1, players: [playerId], gameId };
+	db.rooms.push(room);
+	return room;
+};
+
+export const addPlayerToRoom = (roomId: number, playerId: number): void => {
+	const room = db.rooms.find((room) => room.id === roomId);
+	if (room) {
+		room.players.push(playerId);
+	}
 };

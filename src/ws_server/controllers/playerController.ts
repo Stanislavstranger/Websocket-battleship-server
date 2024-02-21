@@ -1,8 +1,9 @@
 import WebSocket from 'ws';
 import { validatePlayerRegistration } from '../utils/validationUtils';
-import { players, registerPlayer } from '../services/userService';
+import { createPlayer } from '../services/userService';
 import { Player } from '../models/models';
 import handleRoomUpdate from './roomController';
+import db from '../data/db';
 
 const handlePlayerRegistration = (data: Player, ws: WebSocket): void => {
 	const validationResult = validatePlayerRegistration(data);
@@ -20,7 +21,7 @@ const handlePlayerRegistration = (data: Player, ws: WebSocket): void => {
 	}
 
 	const { name, password } = data;
-	const registrationResult = registerPlayer(name, password);
+	const registrationResult = createPlayer(name, password);
 	const responseData = {
 		type: 'reg',
 		data: JSON.stringify({
@@ -34,8 +35,8 @@ const handlePlayerRegistration = (data: Player, ws: WebSocket): void => {
 	const response = JSON.stringify(responseData);
 	ws.send(response);
 
-	if (players.length > 1) {
-		console.log('🚀 ~ handlePlayerRegistration ~ players:', players);
+	if (db.players.length > 1) {
+		console.log('🚀 ~ handlePlayerRegistration ~ players:', db.players);
 		handleRoomUpdate(registrationResult, ws);
 	}
 };

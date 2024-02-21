@@ -1,9 +1,9 @@
 import WebSocket from 'ws';
 import 'colors';
 import handlePlayerRegistration from '../controllers/playerController';
-import { players } from '../services/userService';
 import handleRoomCreation from '../controllers/roomController';
 import handleGameCreation from '../controllers/gameController';
+import db from '../data/db';
 
 export const handleWebSocketConnection = (ws: WebSocket): void => {
 	console.log('👉👈 New WebSocket connection'.green.inverse);
@@ -12,7 +12,7 @@ export const handleWebSocketConnection = (ws: WebSocket): void => {
 		try {
 			const parsedMessage = JSON.parse(message);
 			console.log('Received message:', parsedMessage);
-			console.log(players);
+			console.log(db);
 			switch (parsedMessage.type) {
 				case 'reg':
 					handlePlayerRegistration(JSON.parse(parsedMessage.data), ws);

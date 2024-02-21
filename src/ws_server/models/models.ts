@@ -3,7 +3,7 @@ export interface Player {
 	password: string;
 }
 
-export interface RegisteredPlayer {
+export interface Players {
 	name: string;
 	password: string;
 	id: number;
@@ -11,7 +11,7 @@ export interface RegisteredPlayer {
 
 export interface Rooms {
 	id: number;
-	players: RegisteredPlayer[];
+	players: number[];
 	gameId: number;
 }
 
@@ -36,8 +36,8 @@ export interface Ships {
 }
 
 export interface DB {
-	players: RegisteredPlayer[];
+	players: Players[];
 	rooms: Rooms[];
 	games: Games[];
-	ships: [];
+	ships: Ships[];
 }
