@@ -1,7 +1,7 @@
 import WebSocket from 'ws';
 import { Players } from '../models/models';
 
-const handleRoomUpdate = (data: Players, ws: WebSocket): void => {
+const handleRoomCreation = (data: Players, ws: WebSocket): void => {
 	const responseData = {
 		type: 'update_room',
 		data: JSON.stringify([
@@ -21,4 +21,4 @@ const handleRoomUpdate = (data: Players, ws: WebSocket): void => {
 	ws.send(response);
 };
 
-export default handleRoomUpdate;
+export default handleRoomCreation;
