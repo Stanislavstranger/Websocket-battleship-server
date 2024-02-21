@@ -9,8 +9,8 @@ const handlePlayerRegistration = (data: Player, ws: WebSocket): void => {
 		return;
 	}
 
-	const { name, password } = data;
-	const registrationResult = registerPlayer(name, password);
+	const { name } = data;
+	const registrationResult = registerPlayer(name);
 	const responseData = {
 		type: 'reg',
 		data: JSON.stringify({

@@ -3,6 +3,7 @@ export interface Player {
 	password: string;
 }
 
-export interface RegistredPlayer {
+export interface RegisteredPlayer {
 	name: string;
+	id: string;
 }

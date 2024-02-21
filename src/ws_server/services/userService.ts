@@ -1,9 +1,10 @@
-import { Player } from '../models/Player';
+import { Player, RegisteredPlayer } from '../models/Player';
+import { v4 as uuidv4 } from 'uuid';
 
-export const players: Player[] = [];
+export const players: RegisteredPlayer[] = [];
 
-export const registerPlayer = (name: string, password: string): Player => {
-	const newPlayer: Player = { name, password };
+export const registerPlayer = (name: string): RegisteredPlayer => {
+	const newPlayer: RegisteredPlayer = { name, id: uuidv4() };
 	players.push(newPlayer);
 	return newPlayer;
 };
