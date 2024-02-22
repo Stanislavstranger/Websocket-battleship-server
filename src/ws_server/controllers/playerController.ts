@@ -4,6 +4,7 @@ import { createPlayer } from '../services/playerService';
 import { Player } from '../models/models';
 import handleRoomUpdate from './roomController';
 import db from '../data/db';
+import handleRoomCreation from './roomController';
 
 const handlePlayerRegistration = (data: Player, ws: WebSocket): void => {
 	const validationResult = validatePlayerRegistration(data);
@@ -36,7 +37,7 @@ const handlePlayerRegistration = (data: Player, ws: WebSocket): void => {
 	const response = JSON.stringify(responseData);
 	ws.send(response);
 
-	/* handleRoomUpdate(db.players[length - 1], ws); */
+	console.log(db);
 };
 
 export default handlePlayerRegistration;

@@ -1,12 +1,12 @@
 import WebSocket from 'ws';
-import { Player } from '../models/models';
+import { Players } from '../models/models';
 
-const handleGameCreation = (data: Player, ws: WebSocket): void => {
+const handleGameCreation = (player: Players, ws: WebSocket): void => {
 	const responseData = {
 		type: 'create_game',
 		data: JSON.stringify({
 			idGame: 1,
-			idPlayer: 0,
+			idPlayer: player.id,
 		}),
 		id: 0,
 	};
