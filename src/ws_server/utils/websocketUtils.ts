@@ -29,6 +29,10 @@ export const handleWebSocketConnection = (ws: WebSocket): void => {
 					addPlayerToRoom(JSON.parse(parsedMessage.data), players[players.length - 1].id);
 					handleGameCreation(players[players.length - 1], ws);
 					break;
+				case 'add_ships':
+					addPlayerToRoom(JSON.parse(parsedMessage.data), players[players.length - 1].id);
+					handleGameCreation(players[players.length - 1], ws);
+					break;
 				default:
 					console.log('❗ Unknown command type'.red.bgWhite);
 					break;

@@ -20,7 +20,7 @@ export interface Games {
 	player1Id: number;
 	player2Id: number;
 	currentPlayerId: number;
-	winnerId: number;
+	winnerId: number | undefined;
 	gameStatus: 'miss' | 'killed' | 'shot';
 }
 
