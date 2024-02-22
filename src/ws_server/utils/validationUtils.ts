@@ -1,19 +1,24 @@
 import { Player } from '../models/models';
 import db from '../data/db';
-import { createPlayer } from '../services/playerService';
+import { createPlayer, getPlayerByName } from '../services/playerService';
 
 export const validatePlayerRegistration = (data: Player): boolean => {
 	const { players } = db;
-	if (!data.name || !data.password || data.name.length < 5 || data.password.length < 5) {
+	const { name, password } = data;
+	if (!name || !password || name.length < 5 || password.length < 5) {
 		return false;
 	}
 
-	const existingPlayer = players.find(
-		(player) => player.name === data.name && player.password === data.password,
-	);
+	const player = getPlayerByName(name);
 
-	if (!existingPlayer) {
-		createPlayer(data.name, data.password);
+	if (!player) {
+		createPlayer(name, password);
+		return true;
 	}
+
+	if (player.password !== password) {
+		return false;
+	}
+
 	return true;
 };

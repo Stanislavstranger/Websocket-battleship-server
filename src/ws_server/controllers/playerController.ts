@@ -8,24 +8,25 @@ import db from '../data/db';
 const handlePlayerRegistration = (data: Player, ws: WebSocket): void => {
 	const validationResult = validatePlayerRegistration(data);
 	if (!validationResult) {
-		const response = JSON.stringify({
-			type: 'error',
-			data: {
+		const responseData = {
+			type: 'reg',
+			data: JSON.stringify({
 				error: true,
-				errorText: 'The user already exists. Enter a different name.',
-			},
+				errorText: "Password doesn't match",
+			}),
 			id: 0,
-		});
+		};
+		const response = JSON.stringify(responseData);
+		console.log('🚀 ~ handlePlayerRegistration ~ response:', response);
 		ws.send(response);
 		return;
 	}
 
-	const { name, password } = data;
-	const registrationResult = createPlayer(name, password);
+	const { name } = data;
 	const responseData = {
 		type: 'reg',
 		data: JSON.stringify({
-			name: registrationResult.name,
+			name,
 			index: 0,
 			error: false,
 			errorText: '',
@@ -35,7 +36,7 @@ const handlePlayerRegistration = (data: Player, ws: WebSocket): void => {
 	const response = JSON.stringify(responseData);
 	ws.send(response);
 
-	handleRoomUpdate(registrationResult, ws);
+	/* handleRoomUpdate(db.players[length - 1], ws); */
 };
 
 export default handlePlayerRegistration;

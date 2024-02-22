@@ -7,6 +7,6 @@ export const createPlayer = (name: string, password: string): Players => {
 	return player;
 };
 
-export const getPlayerByNameAndPassword = (name: string, password: string): Player | undefined => {
-	return db.players.find((player) => player.name === name && player.password === password);
+export const getPlayerByName = (name: string): Player | undefined => {
+	return db.players.find((player) => player.name === name);
 };
