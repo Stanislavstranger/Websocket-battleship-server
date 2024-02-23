@@ -35,9 +35,15 @@ export interface Ships {
 	type: 'small' | 'medium' | 'large' | 'huge';
 }
 
+export interface Connections {
+	id: number;
+	ws: WebSocket;
+}
+
 export interface DB {
 	players: Players[];
 	rooms: Rooms[];
 	games: Games[];
 	ships: Ships[];
+	connections: Connections[];
 }

@@ -1,14 +1,16 @@
 import WebSocket from 'ws';
 import 'colors';
 import handlePlayerRegistration from '../controllers/playerController';
-import handleGameCreation from '../controllers/gameController';
+import { handleGameCreation } from '../controllers/gameController';
 import db from '../data/db';
 import handleRoomUpdate from '../controllers/roomController';
 import { addPlayerToRoom, createRoom } from '../services/roomService';
+import { addConnection, removeConnection } from '../services/connectionService';
 
 export const handleWebSocketConnection = (ws: WebSocket): void => {
 	console.log('👉👈 New WebSocket connection'.green.inverse);
 
+	const connectionId = addConnection(ws as any);
 	const { players, rooms, games } = db;
 	ws.on('message', (message: string) => {
 		try {
@@ -17,6 +19,7 @@ export const handleWebSocketConnection = (ws: WebSocket): void => {
 			switch (parsedMessage.type) {
 				case 'reg':
 					handlePlayerRegistration(JSON.parse(parsedMessage.data), ws);
+					console.log(db.connections);
 					if (rooms[rooms.length - 1]) {
 						handleRoomUpdate(ws);
 					}
@@ -30,8 +33,8 @@ export const handleWebSocketConnection = (ws: WebSocket): void => {
 					handleGameCreation(players[players.length - 1], ws);
 					break;
 				case 'add_ships':
-					addPlayerToRoom(JSON.parse(parsedMessage.data), players[players.length - 1].id);
-					handleGameCreation(players[players.length - 1], ws);
+					/* addPlayerToRoom(JSON.parse(parsedMessage.data), players[players.length - 1].id);
+					handleGameStart(players[players.length - 1], ws); */
 					break;
 				default:
 					console.log('❗ Unknown command type'.red.bgWhite);
@@ -44,5 +47,7 @@ export const handleWebSocketConnection = (ws: WebSocket): void => {
 
 	ws.on('close', () => {
 		console.log('👈👉 WebSocket connection closed'.red.inverse);
+		removeConnection(connectionId);
+		console.log(db.connections);
 	});
 };

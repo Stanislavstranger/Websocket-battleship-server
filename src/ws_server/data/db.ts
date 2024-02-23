@@ -5,6 +5,7 @@ const db: DB = {
 	rooms: [],
 	games: [],
 	ships: [],
+	connections: [],
 };
 
 export default db;
