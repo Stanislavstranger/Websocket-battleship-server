@@ -1,7 +1,7 @@
 import WebSocket from 'ws';
 import 'colors';
 import handlePlayerRegistration from '../controllers/playerController';
-import { handleGameCreation } from '../controllers/gameController';
+import { handleGameCreation, handleGameStart } from '../controllers/gameController';
 import db from '../data/db';
 import handleRoomUpdate from '../controllers/roomController';
 import { addPlayerToRoom, createRoom } from '../services/roomService';
@@ -33,8 +33,7 @@ export const handleWebSocketConnection = (ws: WebSocket): void => {
 					handleGameCreation(players[players.length - 1], ws);
 					break;
 				case 'add_ships':
-					/* addPlayerToRoom(JSON.parse(parsedMessage.data), players[players.length - 1].id);
-					handleGameStart(players[players.length - 1], ws); */
+					handleGameStart(JSON.parse(parsedMessage.data), ws);
 					break;
 				default:
 					console.log('❗ Unknown command type'.red.bgWhite);

@@ -11,12 +11,12 @@ export const getPlayerByName = (name: string): Player | undefined => {
 	return db.players.find((player) => player.name === name);
 };
 
-export const findPlayerByWs = (ws: WebSocket): Connections | undefined => {
+export const getPlayerByWs = (ws: WebSocket): Connections | undefined => {
 	const result = db.connections.find((connect) => connect.ws === ws);
 	return result;
 };
 
-export const findPlayerById = (id: number): Connections | undefined => {
+export const getPlayerById = (id: number): Connections | undefined => {
 	const result = db.connections.find((connect) => connect.playerId === id);
 	return result;
 };

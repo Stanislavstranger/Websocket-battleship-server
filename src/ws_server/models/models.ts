@@ -27,12 +27,15 @@ export interface Games {
 export interface Ships {
 	id: number;
 	gameId: number;
-	playerId: number;
-	positionX: number;
-	positionY: number;
-	direction: boolean;
-	length: number;
-	type: 'small' | 'medium' | 'large' | 'huge';
+	ships: {
+		playerId: number;
+		positionX: number;
+		positionY: number;
+		direction: boolean;
+		length: number;
+		type: 'small' | 'medium' | 'large' | 'huge';
+	};
+	indexPlayer: number;
 }
 
 export interface Connections {
