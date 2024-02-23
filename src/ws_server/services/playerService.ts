@@ -1,5 +1,5 @@
 import db from '../data/db';
-import { Player, Players } from '../models/models';
+import { Connections, Player, Players } from '../models/models';
 
 export const createPlayer = (name: string, password: string): Players => {
 	const player = { id: db.players.length + 1, name, password };
@@ -9,4 +9,14 @@ export const createPlayer = (name: string, password: string): Players => {
 
 export const getPlayerByName = (name: string): Player | undefined => {
 	return db.players.find((player) => player.name === name);
+};
+
+export const findPlayerByWs = (ws: WebSocket): Connections | undefined => {
+	const result = db.connections.find((connect) => connect.ws === ws);
+	return result;
+};
+
+export const findPlayerById = (id: number): Connections | undefined => {
+	const result = db.connections.find((connect) => connect.playerId === id);
+	return result;
 };

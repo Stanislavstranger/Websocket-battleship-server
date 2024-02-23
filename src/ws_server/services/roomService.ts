@@ -8,10 +8,11 @@ export const createRoom = (playerId: number): Rooms => {
 	return room;
 };
 
-export const addPlayerToRoom = (roomId: number, playerId: number): void => {
+export const addPlayerToRoom = (roomId: number): void => {
+	console.log(roomId);
 	const room = db.rooms.find((room) => room.id === roomId);
-	if (room) {
-		room.players.push(playerId);
+	if (room && room.players.length < 2) {
+		room.players.push(db.players[db.players.length - 1].id);
 	}
-	console.log(db);
+	console.log(db.rooms[0].players);
 };

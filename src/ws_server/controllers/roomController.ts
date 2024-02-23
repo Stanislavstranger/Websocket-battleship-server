@@ -1,7 +1,7 @@
 import db from '../data/db';
 
 const handleRoomUpdate = (): void => {
-	const roomsWithOnePlayer = db.rooms.filter((room) => room.players.length === 1);
+	const roomsWithOnePlayer = db.rooms.filter((room) => room.players.length < 2);
 	const data = roomsWithOnePlayer.map((room) => {
 		const player = db.players.find((player) => player.id === room.players[0]);
 		return {
