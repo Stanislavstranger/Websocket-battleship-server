@@ -1,7 +1,6 @@
-import WebSocket from 'ws';
 import db from '../data/db';
 
-const handleRoomUpdate = (ws: WebSocket): void => {
+const handleRoomUpdate = (): void => {
 	const roomsWithOnePlayer = db.rooms.filter((room) => room.players.length === 1);
 	const data = roomsWithOnePlayer.map((room) => {
 		const player = db.players.find((player) => player.id === room.players[0]);
@@ -23,7 +22,10 @@ const handleRoomUpdate = (ws: WebSocket): void => {
 	};
 
 	const response = JSON.stringify(responseData);
-	ws.send(response);
+
+	db.connections.forEach((connection) => {
+		connection.ws.send(response);
+	});
 };
 
 export default handleRoomUpdate;

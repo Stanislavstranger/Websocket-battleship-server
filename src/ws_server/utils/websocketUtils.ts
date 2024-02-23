@@ -21,12 +21,12 @@ export const handleWebSocketConnection = (ws: WebSocket): void => {
 					handlePlayerRegistration(JSON.parse(parsedMessage.data), ws);
 					console.log(db.connections);
 					if (rooms[rooms.length - 1]) {
-						handleRoomUpdate(ws);
+						handleRoomUpdate();
 					}
 					break;
 				case 'create_room':
 					createRoom(players[players.length - 1].id);
-					handleRoomUpdate(ws);
+					handleRoomUpdate();
 					break;
 				case 'add_user_to_room':
 					addPlayerToRoom(JSON.parse(parsedMessage.data), players[players.length - 1].id);

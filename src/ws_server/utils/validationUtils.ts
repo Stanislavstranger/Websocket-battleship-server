@@ -1,9 +1,7 @@
 import { Player } from '../models/models';
-import db from '../data/db';
 import { createPlayer, getPlayerByName } from '../services/playerService';
 
 export const validatePlayerRegistration = (data: Player): boolean => {
-	const { players } = db;
 	const { name, password } = data;
 	if (!name || !password || name.length < 5 || password.length < 5) {
 		return false;
