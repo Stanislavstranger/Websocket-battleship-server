@@ -2,25 +2,39 @@ import db from '../data/db';
 import { Rooms } from '../models/models';
 import { getPlayerByWs } from './playerService';
 
+const playerCreatedRooms: { [playerId: number]: number } = {};
+
 export const createRoom = (ws: WebSocket): Rooms | void => {
-	const playerId = getPlayerByWs(ws);
-	if (!playerId) return;
+	const player = getPlayerByWs(ws);
+	if (!player) return;
 
 	const room = {
 		id: db.rooms.length + 1,
-		players: [playerId.playerId],
+		players: [player.playerId],
 		gameId: db.games.length + 1,
 	};
 	db.rooms.push(room);
+	playerCreatedRooms[player.playerId] = room.id;
 	return room;
 };
 
 export const addPlayerToRoom = (roomId: { indexRoom: number }, ws: WebSocket): void => {
 	const room = db.rooms.find((room) => room.id === roomId.indexRoom);
-	const playerId = getPlayerByWs(ws);
-	if (room && room.players.length < 2 && playerId && room.players[0] !== playerId.playerId) {
-		room.players.push(playerId.playerId);
+	const player = getPlayerByWs(ws);
+	if (room && room.players.length < 2 && player && room.players[0] !== player.playerId) {
+		if (playerCreatedRooms[player.playerId]) {
+			deleteRoom(playerCreatedRooms[player.playerId]);
+			delete playerCreatedRooms[player.playerId];
+		}
+		room.players.push(player.playerId);
 		console.log(db.rooms);
+	}
+};
+
+export const deleteRoom = (roomId: number): void => {
+	const index = db.rooms.findIndex((room) => room.id === roomId);
+	if (index !== -1) {
+		db.rooms.splice(index, 1);
 	}
 };
 
