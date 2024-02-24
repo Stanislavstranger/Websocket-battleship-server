@@ -4,7 +4,7 @@ import handlePlayerRegistration from '../controllers/playerController';
 import { handleGameCreation, handleGameStart } from '../controllers/gameController';
 import db from '../data/db';
 import handleRoomUpdate from '../controllers/roomController';
-import { addPlayerToRoom, createRoom, isRoom } from '../services/roomService';
+import { addPlayerToRoom, createRoom, deleteRoomByPlayerId, isRoom } from '../services/roomService';
 import { addConnection, removeConnection } from '../services/connectionService';
 import { getPlayerByWs } from '../services/playerService';
 
@@ -45,7 +45,11 @@ export const handleWebSocketConnection = (ws: WebSocket): void => {
 	ws.on('close', () => {
 		console.log('👈👉 WebSocket connection closed'.red.inverse);
 		const connection = getPlayerByWs(ws as any);
-		if (connection) removeConnection(connection.playerId);
+		if (connection) {
+			removeConnection(connection.playerId);
+			deleteRoomByPlayerId(connection?.playerId);
+			handleRoomUpdate();
+		}
 		console.log(db);
 	});
 };

@@ -23,7 +23,7 @@ export const addPlayerToRoom = (roomId: { indexRoom: number }, ws: WebSocket): v
 	const player = getPlayerByWs(ws);
 	if (room && room.players.length < 2 && player && room.players[0] !== player.playerId) {
 		if (playerCreatedRooms[player.playerId]) {
-			deleteRoom(playerCreatedRooms[player.playerId]);
+			deleteRoomByRoomId(playerCreatedRooms[player.playerId]);
 			delete playerCreatedRooms[player.playerId];
 		}
 		room.players.push(player.playerId);
@@ -31,10 +31,18 @@ export const addPlayerToRoom = (roomId: { indexRoom: number }, ws: WebSocket): v
 	}
 };
 
-export const deleteRoom = (roomId: number): void => {
+export const deleteRoomByRoomId = (roomId: number): void => {
 	const index = db.rooms.findIndex((room) => room.id === roomId);
 	if (index !== -1) {
 		db.rooms.splice(index, 1);
+	}
+};
+
+export const deleteRoomByPlayerId = (playerId: number): void => {
+	const roomId = playerCreatedRooms[playerId];
+	if (roomId) {
+		deleteRoomByRoomId(roomId);
+		delete playerCreatedRooms[playerId];
 	}
 };
 
