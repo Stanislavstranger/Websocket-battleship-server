@@ -28,7 +28,8 @@ export const handleWebSocketConnection = (ws: WebSocket): void => {
 					break;
 				case 'add_user_to_room':
 					addPlayerToRoom(JSON.parse(parsedMessage.data), ws as any);
-					handleGameCreation(players[players.length - 1], ws);
+					handleRoomUpdate();
+					handleGameCreation();
 					break;
 				case 'add_ships':
 					handleGameStart(JSON.parse(parsedMessage.data), ws);
