@@ -4,13 +4,14 @@ import handlePlayerRegistration from '../controllers/playerController';
 import { handleGameCreation, handleGameStart } from '../controllers/gameController';
 import db from '../data/db';
 import handleRoomUpdate from '../controllers/roomController';
-import { addPlayerToRoom, createRoom } from '../services/roomService';
+import { addPlayerToRoom, createRoom, isRoom } from '../services/roomService';
 import { addConnection, removeConnection } from '../services/connectionService';
+import { getPlayerByWs } from '../services/playerService';
+import { Player } from '../models/models';
 
 export const handleWebSocketConnection = (ws: WebSocket): void => {
 	console.log('👉👈 New WebSocket connection'.green.inverse);
 
-	const connectionId = addConnection(ws as any);
 	const { players, rooms, games } = db;
 	ws.on('message', (message: string) => {
 		try {
@@ -19,13 +20,11 @@ export const handleWebSocketConnection = (ws: WebSocket): void => {
 			switch (parsedMessage.type) {
 				case 'reg':
 					handlePlayerRegistration(JSON.parse(parsedMessage.data), ws);
-					console.log(db.connections);
-					if (rooms[rooms.length - 1]) {
-						handleRoomUpdate();
-					}
+					addConnection(ws as any);
+					isRoom() ? handleRoomUpdate() : undefined;
 					break;
 				case 'create_room':
-					createRoom(players[players.length - 1].id);
+					createRoom(ws as any);
 					handleRoomUpdate();
 					break;
 				case 'add_user_to_room':
@@ -46,7 +45,7 @@ export const handleWebSocketConnection = (ws: WebSocket): void => {
 
 	ws.on('close', () => {
 		console.log('👈👉 WebSocket connection closed'.red.inverse);
-		removeConnection(connectionId);
-		console.log(db.connections);
+		const connection = getPlayerByWs(ws as any);
+		if (connection) removeConnection(connection.playerId);
 	});
 };

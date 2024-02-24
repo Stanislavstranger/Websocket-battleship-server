@@ -39,7 +39,6 @@ export interface Ships {
 }
 
 export interface Connections {
-	id: number;
 	playerId: number;
 	ws: WebSocket;
 }

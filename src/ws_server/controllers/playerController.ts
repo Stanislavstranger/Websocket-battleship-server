@@ -1,10 +1,7 @@
 import WebSocket from 'ws';
 import { validatePlayerRegistration } from '../utils/validationUtils';
-import { createPlayer } from '../services/playerService';
 import { Player } from '../models/models';
-import handleRoomUpdate from './roomController';
 import db from '../data/db';
-import handleRoomCreation from './roomController';
 
 const handlePlayerRegistration = (data: Player, ws: WebSocket): void => {
 	const validationResult = validatePlayerRegistration(data);
@@ -18,7 +15,6 @@ const handlePlayerRegistration = (data: Player, ws: WebSocket): void => {
 			id: 0,
 		};
 		const response = JSON.stringify(responseData);
-		console.log('🚀 ~ handlePlayerRegistration ~ response:', response);
 		ws.send(response);
 		return;
 	}
@@ -36,8 +32,7 @@ const handlePlayerRegistration = (data: Player, ws: WebSocket): void => {
 	};
 	const response = JSON.stringify(responseData);
 	ws.send(response);
-
-	console.log(db);
+	return;
 };
 
 export default handlePlayerRegistration;

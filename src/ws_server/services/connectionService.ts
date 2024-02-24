@@ -1,34 +1,17 @@
 import db from '../data/db';
+import { getPlayerByWs } from './playerService';
 
-export const addConnection = (ws: WebSocket): number => {
-	if (db.connections.length > 0) {
-		const id = db.connections[db.connections.length - 1].id + 1;
-		if (db.players.length > 0) {
-			const playerId = db.players[db.players.length - 1].id + 1;
-			db.connections.push({ id, playerId, ws });
-			return id;
-		} else {
-			const playerId = 1;
-			db.connections.push({ id, playerId, ws });
-			return id;
-		}
-	} else {
-		const id = 1;
-		if (db.players.length > 0) {
-			const playerId = db.players[db.players.length - 1].id + 1;
-			db.connections.push({ id, playerId, ws });
-			return id;
-		} else {
-			const playerId = 1;
-			db.connections.push({ id, playerId, ws });
-			return id;
-		}
-	}
+const { players } = db;
+
+export const addConnection = (ws: WebSocket): void => {
+	db.connections.push({ playerId: players[players.length - 1].id, ws });
+	console.log(db.connections);
 };
 
 export const removeConnection = (id: number): void => {
-	const index = db.connections.findIndex((connection) => connection.id === id);
+	const index = db.connections.findIndex((connection) => connection.playerId === id);
 	if (index !== -1) {
 		db.connections.splice(index, 1);
 	}
+	console.log(db.connections);
 };
