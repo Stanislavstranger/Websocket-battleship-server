@@ -15,10 +15,12 @@ export const createRoom = (ws: WebSocket): Rooms | void => {
 	return room;
 };
 
-export const addPlayerToRoom = (roomId: number): void => {
-	const room = db.rooms.find((room) => room.id === roomId);
-	if (room && room.players.length < 2) {
-		room.players.push(db.players[db.players.length - 1].id);
+export const addPlayerToRoom = (roomId: { indexRoom: number }, ws: WebSocket): void => {
+	const room = db.rooms.find((room) => room.id === roomId.indexRoom);
+	const playerId = getPlayerByWs(ws);
+	if (room && room.players.length < 2 && playerId && room.players[0] !== playerId.playerId) {
+		room.players.push(playerId.playerId);
+		console.log(db.rooms);
 	}
 };
 

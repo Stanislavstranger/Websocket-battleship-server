@@ -26,6 +26,7 @@ const handleRoomUpdate = (): void => {
 	db.connections.forEach((connection) => {
 		connection.ws.send(response);
 	});
+	console.log(db);
 };
 
 export default handleRoomUpdate;

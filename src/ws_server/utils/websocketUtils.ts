@@ -7,7 +7,6 @@ import handleRoomUpdate from '../controllers/roomController';
 import { addPlayerToRoom, createRoom, isRoom } from '../services/roomService';
 import { addConnection, removeConnection } from '../services/connectionService';
 import { getPlayerByWs } from '../services/playerService';
-import { Player } from '../models/models';
 
 export const handleWebSocketConnection = (ws: WebSocket): void => {
 	console.log('👉👈 New WebSocket connection'.green.inverse);
@@ -28,7 +27,7 @@ export const handleWebSocketConnection = (ws: WebSocket): void => {
 					handleRoomUpdate();
 					break;
 				case 'add_user_to_room':
-					addPlayerToRoom(JSON.parse(parsedMessage.data));
+					addPlayerToRoom(JSON.parse(parsedMessage.data), ws as any);
 					handleGameCreation(players[players.length - 1], ws);
 					break;
 				case 'add_ships':

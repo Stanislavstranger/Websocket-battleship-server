@@ -1,11 +1,9 @@
 import db from '../data/db';
-import { getPlayerByWs } from './playerService';
 
 const { players } = db;
 
 export const addConnection = (ws: WebSocket): void => {
 	db.connections.push({ playerId: players[players.length - 1].id, ws });
-	console.log(db.connections);
 };
 
 export const removeConnection = (id: number): void => {
@@ -13,5 +11,4 @@ export const removeConnection = (id: number): void => {
 	if (index !== -1) {
 		db.connections.splice(index, 1);
 	}
-	console.log(db.connections);
 };
