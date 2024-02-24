@@ -2,8 +2,8 @@ import db from '../data/db';
 
 const { players } = db;
 
-export const addConnection = (ws: WebSocket): void => {
-	db.connections.push({ playerId: players[players.length - 1].id, ws });
+export const addConnection = (playerId: number, ws: WebSocket): void => {
+	db.connections.push({ playerId, ws });
 };
 
 export const removeConnection = (id: number): void => {

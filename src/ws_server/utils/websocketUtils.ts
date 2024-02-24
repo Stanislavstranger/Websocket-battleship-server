@@ -19,7 +19,6 @@ export const handleWebSocketConnection = (ws: WebSocket): void => {
 			switch (parsedMessage.type) {
 				case 'reg':
 					handlePlayerRegistration(JSON.parse(parsedMessage.data), ws);
-					addConnection(ws as any);
 					isRoom() ? handleRoomUpdate() : undefined;
 					break;
 				case 'create_room':
@@ -47,5 +46,6 @@ export const handleWebSocketConnection = (ws: WebSocket): void => {
 		console.log('👈👉 WebSocket connection closed'.red.inverse);
 		const connection = getPlayerByWs(ws as any);
 		if (connection) removeConnection(connection.playerId);
+		console.log(db);
 	});
 };

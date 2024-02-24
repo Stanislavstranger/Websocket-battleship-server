@@ -2,9 +2,10 @@ import WebSocket from 'ws';
 import { validatePlayerRegistration } from '../utils/validationUtils';
 import { Player } from '../models/models';
 import db from '../data/db';
+import { WriteStream } from 'tty';
 
 const handlePlayerRegistration = (data: Player, ws: WebSocket): void => {
-	const validationResult = validatePlayerRegistration(data);
+	const validationResult = validatePlayerRegistration(data, ws as any);
 	if (!validationResult) {
 		const responseData = {
 			type: 'reg',
