@@ -5,12 +5,14 @@ import { handleGameCreation, handleGameStart } from '../controllers/gameControll
 import db from '../data/db';
 import handleRoomUpdate from '../controllers/roomController';
 import { addPlayerToRoom, createRoom, deleteRoomByPlayerId, isRoom } from '../services/roomService';
-import { addConnection, removeConnection } from '../services/connectionService';
+import { removeConnection } from '../services/connectionService';
 import { getPlayerByWs } from '../services/playerService';
+import { addShips } from '../services/shipService';
 
 export const handleWebSocketConnection = (ws: WebSocket): void => {
 	console.log('👉👈 New WebSocket connection'.green.inverse);
 
+	let shipData;
 	const { players, rooms, games } = db;
 	ws.on('message', (message: string) => {
 		try {
@@ -31,6 +33,7 @@ export const handleWebSocketConnection = (ws: WebSocket): void => {
 					handleGameCreation();
 					break;
 				case 'add_ships':
+					addShips(JSON.parse(parsedMessage.data));
 					handleGameStart(JSON.parse(parsedMessage.data), ws);
 					break;
 				default:

@@ -6,6 +6,7 @@ const db: DB = {
 	games: [],
 	ships: [],
 	connections: [],
+	winners: [],
 };
 
 export default db;

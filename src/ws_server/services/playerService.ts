@@ -1,5 +1,5 @@
 import db from '../data/db';
-import { Connections, Player, Players } from '../models/models';
+import { Connections, Players } from '../models/models';
 import { addConnection } from './connectionService';
 
 export const createPlayer = (name: string, password: string, ws: WebSocket): Players => {

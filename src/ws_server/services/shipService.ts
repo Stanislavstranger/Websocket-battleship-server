@@ -1,27 +1,15 @@
 import db from '../data/db';
 import { Ships } from '../models/models';
 
-export const addShip = (
-	gameId: number,
-	playerId: number,
-	positionX: number,
-	positionY: number,
-	direction: boolean,
-	length: number,
-	type: 'small' | 'medium' | 'large' | 'huge',
-): Ships => {
-	const ship = {
-		id: db.ships.length + 1,
+export const addShips = (data: Ships): void => {
+	const { gameId, ships, indexPlayer } = data;
+	const shipData = {
 		gameId,
-		playerId,
-		positionX,
-		positionY,
-		direction,
-		length,
-		type,
+		ships,
+		indexPlayer,
 	};
-	db.ships.push(ship);
-	return ship;
+	db.ships.push(shipData);
+	console.log(db.ships);
 };
 
 export const getShipsByGameId = (gameId: number): Ships[] => {

@@ -30,7 +30,7 @@ export const handleGameCreation = (): void => {
 };
 
 export const handleGameStart = (data: Ships, ws: WebSocket): void => {
-	const { gameId, ships, indexPlayer } = data;
+	const { ships, indexPlayer } = data;
 	const responseData = {
 		type: 'start_game',
 		data: {
@@ -42,3 +42,17 @@ export const handleGameStart = (data: Ships, ws: WebSocket): void => {
 	const response = JSON.stringify(responseData);
 	ws.send(response);
 };
+
+/* export const handleWinnersUpdate = (ws: WebSocket): void => {
+	const responseData = {
+		type: 'update_winners',
+		data: JSON.stringify({
+			error: true,
+			errorText: "Password doesn't match",
+		}),
+		id: 0,
+	};
+	const response = JSON.stringify(responseData);
+	ws.send(response);
+	return;
+}; */

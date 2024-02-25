@@ -25,16 +25,18 @@ export interface Games {
 }
 
 export interface Ships {
-	id: number;
 	gameId: number;
-	ships: {
-		playerId: number;
-		positionX: number;
-		positionY: number;
-		direction: boolean;
-		length: number;
-		type: 'small' | 'medium' | 'large' | 'huge';
-	};
+	ships: [
+		{
+			position: {
+				positionX: number;
+				positionY: number;
+			};
+			direction: boolean;
+			length: number;
+			type: 'small' | 'medium' | 'large' | 'huge';
+		},
+	];
 	indexPlayer: number;
 }
 
@@ -43,10 +45,16 @@ export interface Connections {
 	ws: WebSocket;
 }
 
+export interface Winners {
+	name: string;
+	win: number;
+}
+
 export interface DB {
 	players: Players[];
 	rooms: Rooms[];
 	games: Games[];
 	ships: Ships[];
 	connections: Connections[];
+	winners: Winners[];
 }
