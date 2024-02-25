@@ -1,6 +1,7 @@
 import { handleGameStart } from '../controllers/gameController';
 import db from '../data/db';
 import { Ships } from '../models/models';
+import { createMatrix } from '../utils/createMatrix';
 
 export const checkIfBothPlayersHaveShips = (gameId: number): Ships[] | undefined => {
 	const shipsForGame = db.ships.filter((ship) => ship.gameId === gameId);
@@ -23,6 +24,8 @@ export const addShips = (data: Ships, ws: WebSocket): void => {
 	const players = checkIfBothPlayersHaveShips(gameId);
 	if (players)
 		players.map((player) => handleGameStart(player.ships, player.indexPlayer, player.ws as any));
+
+	console.log(createMatrix(data));
 };
 
 export const getShipsByGameId = (gameId: number): Ships[] => {
