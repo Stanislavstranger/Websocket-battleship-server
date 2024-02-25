@@ -24,6 +24,13 @@ export interface Games {
 	gameStatus: 'miss' | 'killed' | 'shot';
 }
 
+export interface Ship {
+	position: Position;
+	direction: boolean;
+	length: number;
+	type: 'small' | 'medium' | 'large' | 'huge';
+}
+
 export interface Ships {
 	gameId: number;
 	ships: [
@@ -49,6 +56,23 @@ export interface Connections {
 export interface Winners {
 	name: string;
 	win: number;
+}
+interface Position {
+	x: number;
+	y: number;
+}
+
+export interface AttackData {
+	x: number;
+	y: number;
+	gameId: number;
+	indexPlayer: number;
+}
+
+export interface AttackFeedbackData {
+	position: Position;
+	currentPlayer: number | string;
+	status: 'miss' | 'killed' | 'shot';
 }
 
 export interface DB {

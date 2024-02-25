@@ -2,7 +2,7 @@ import { handleGameStart } from '../controllers/gameController';
 import db from '../data/db';
 import { Ships } from '../models/models';
 
-const checkIfBothPlayersHaveShips = (gameId: number): Ships[] | undefined => {
+export const checkIfBothPlayersHaveShips = (gameId: number): Ships[] | undefined => {
 	const shipsForGame = db.ships.filter((ship) => ship.gameId === gameId);
 	const playersWithShips = new Set(shipsForGame.map((ship) => ship.indexPlayer));
 	if (playersWithShips.size === 2) {
@@ -27,4 +27,8 @@ export const addShips = (data: Ships, ws: WebSocket): void => {
 
 export const getShipsByGameId = (gameId: number): Ships[] => {
 	return db.ships.filter((ship) => ship.gameId === gameId);
+};
+
+export const getShipsByGameIdAndByPlayerId = (gameId: number, playerId: number): Ships[] => {
+	return db.ships.filter((ship) => ship.gameId === gameId && ship.indexPlayer !== playerId);
 };
