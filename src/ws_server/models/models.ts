@@ -29,8 +29,8 @@ export interface Ships {
 	ships: [
 		{
 			position: {
-				positionX: number;
-				positionY: number;
+				x: number;
+				y: number;
 			};
 			direction: boolean;
 			length: number;

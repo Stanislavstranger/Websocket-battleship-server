@@ -21,7 +21,8 @@ export const addShips = (data: Ships, ws: WebSocket): void => {
 	db.ships.push(shipData);
 
 	const players = checkIfBothPlayersHaveShips(gameId);
-	players?.map((player) => handleGameStart(data, player.ws as any));
+	if (players)
+		players.map((player) => handleGameStart(player.ships, player.indexPlayer, player.ws as any));
 };
 
 export const getShipsByGameId = (gameId: number): Ships[] => {

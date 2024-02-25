@@ -29,14 +29,27 @@ export const handleGameCreation = (): void => {
 	});
 };
 
-export const handleGameStart = (data: Ships, ws: WebSocket): void => {
-	const { ships, indexPlayer } = data;
+export const handleGameStart = (
+	ships: [
+		{
+			position: {
+				x: number;
+				y: number;
+			};
+			direction: boolean;
+			length: number;
+			type: 'small' | 'medium' | 'large' | 'huge';
+		},
+	],
+	indexPlayer: number,
+	ws: WebSocket,
+): void => {
 	const responseData = {
 		type: 'start_game',
-		data: {
-			ships,
+		data: JSON.stringify({
+			ships: ships,
 			currentPlayerIndex: indexPlayer,
-		},
+		}),
 		id: 0,
 	};
 	const response = JSON.stringify(responseData);
