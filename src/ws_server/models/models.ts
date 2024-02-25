@@ -38,6 +38,7 @@ export interface Ships {
 		},
 	];
 	indexPlayer: number;
+	ws: WebSocket;
 }
 
 export interface Connections {
