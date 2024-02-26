@@ -86,6 +86,55 @@ const checkSurroundingCells = (matrix: number[][], x: number, y: number): boolea
 	return true;
 };
 
+const sendMissToServer = (x: number, y: number, currentPlayer: number, ws: WebSocket): void => {
+	const feedback: AttackFeedbackData = {
+		position: { x, y },
+		currentPlayer,
+		status: 'miss',
+	};
+
+	ws.send(JSON.stringify({ type: 'attack', data: JSON.stringify(feedback), id: 0 }));
+};
+
+const markCellsAroundKilledShipAsMiss = (
+	matrix: number[][],
+	indexPlayer: number,
+	ws: WebSocket,
+): void => {
+	const directions = [
+		[-1, -1],
+		[-1, 0],
+		[-1, 1],
+		[0, -1],
+		[0, 1],
+		[1, -1],
+		[1, 0],
+		[1, 1],
+	];
+
+	for (let y = 0; y < matrix.length; y++) {
+		for (let x = 0; x < matrix[0].length; x++) {
+			if (matrix[y][x] === 2) {
+				for (const [dx, dy] of directions) {
+					const newX = x + dx;
+					const newY = y + dy;
+
+					if (
+						newX >= 0 &&
+						newX < matrix[0].length &&
+						newY >= 0 &&
+						newY < matrix.length &&
+						matrix[newY][newX] !== 2
+					) {
+						matrix[newY][newX] = 0;
+						sendMissToServer(newX, newY, indexPlayer, ws);
+					}
+				}
+			}
+		}
+	}
+};
+
 export const handleAttack = (data: AttackData, ws: WebSocket): void => {
 	const players = checkIfBothPlayersHaveShips(data.gameId);
 	const shipsDataWithIndices: { index: number; ship: Ships }[] = getShipsByGameIdAndByPlayerId(
@@ -105,6 +154,7 @@ export const handleAttack = (data: AttackData, ws: WebSocket): void => {
 			if (checkSurroundingCells(db.ships[index].matrix, x, y)) {
 				status = 'killed';
 				secondShot = true;
+				markCellsAroundKilledShipAsMiss(db.ships[index].matrix, data.indexPlayer, ws);
 			} else {
 				status = 'shot';
 				secondShot = true;
