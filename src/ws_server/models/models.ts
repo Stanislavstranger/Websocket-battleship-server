@@ -44,6 +44,7 @@ export interface Ships {
 			type: 'small' | 'medium' | 'large' | 'huge';
 		},
 	];
+	matrix: number[][];
 	indexPlayer: number;
 	ws: WebSocket;
 }
@@ -65,6 +66,11 @@ interface Position {
 export interface AttackData {
 	x: number;
 	y: number;
+	gameId: number;
+	indexPlayer: number;
+}
+
+export interface RandomAttackData {
 	gameId: number;
 	indexPlayer: number;
 }

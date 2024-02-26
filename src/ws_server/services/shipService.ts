@@ -16,6 +16,7 @@ export const addShips = (data: Ships, ws: WebSocket): void => {
 	const shipData = {
 		gameId,
 		ships,
+		matrix: createMatrix(data),
 		indexPlayer,
 		ws,
 	};
@@ -26,12 +27,18 @@ export const addShips = (data: Ships, ws: WebSocket): void => {
 		players.map((player) => handleGameStart(player.ships, player.indexPlayer, player.ws as any));
 
 	console.log(createMatrix(data));
+	console.log(db);
 };
 
 export const getShipsByGameId = (gameId: number): Ships[] => {
 	return db.ships.filter((ship) => ship.gameId === gameId);
 };
 
-export const getShipsByGameIdAndByPlayerId = (gameId: number, playerId: number): Ships[] => {
-	return db.ships.filter((ship) => ship.gameId === gameId && ship.indexPlayer !== playerId);
+export const getShipsByGameIdAndByPlayerId = (
+	gameId: number,
+	playerId: number,
+): { index: number; ship: Ships }[] => {
+	return db.ships
+		.map((ship, index) => ({ index, ship }))
+		.filter((item) => item.ship.gameId === gameId && item.ship.indexPlayer !== playerId);
 };

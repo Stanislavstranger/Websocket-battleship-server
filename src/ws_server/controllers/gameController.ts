@@ -2,7 +2,7 @@ import WebSocket from 'ws';
 import db from '../data/db';
 import { getPlayerById } from '../services/playerService';
 import { createGame } from '../services/gameService';
-import { AttackData, AttackFeedbackData, Ship, Ships } from '../models/models';
+import { AttackData, AttackFeedbackData, RandomAttackData, Ships } from '../models/models';
 import {
 	checkIfBothPlayersHaveShips,
 	getShipsByGameIdAndByPlayerId,
@@ -58,29 +58,61 @@ export const handleGameStart = (
 	};
 	const response = JSON.stringify(responseData);
 	ws.send(response);
-	console.log(db.ships);
+};
+
+const checkSurroundingCells = (matrix: number[][], x: number, y: number): boolean => {
+	const directions = [
+		[-1, -1],
+		[-1, 0],
+		[-1, 1],
+		[0, -1],
+		[0, 1],
+		[1, -1],
+		[1, 0],
+		[1, 1],
+	];
+
+	for (const [dx, dy] of directions) {
+		const newX = x + dx;
+		const newY = y + dy;
+
+		if (newX >= 0 && newX < matrix[0].length && newY >= 0 && newY < matrix.length) {
+			if (matrix[newY][newX] === 1) {
+				return false;
+			}
+		}
+	}
+
+	return true;
 };
 
 export const handleAttack = (data: AttackData, ws: WebSocket): void => {
 	const players = checkIfBothPlayersHaveShips(data.gameId);
-	const shipsData: Ships[] = getShipsByGameIdAndByPlayerId(data.gameId, data.indexPlayer);
+	const shipsDataWithIndices: { index: number; ship: Ships }[] = getShipsByGameIdAndByPlayerId(
+		data.gameId,
+		data.indexPlayer,
+	);
 
-	let status: 'miss' | 'killed' | 'shot';
-	let shipHit: Ship | undefined;
+	let status: 'miss' | 'killed' | 'shot' = 'miss';
+	let secondShot: boolean = false;
 
-	for (const shipData of shipsData) {
-		shipHit = shipData.ships.find(
-			(ship) => ship.position.x === data.x && ship.position.y === data.y,
-		);
-		if (shipHit) {
+	for (const { index, ship } of shipsDataWithIndices) {
+		const { x, y } = data;
+		if (ship.matrix[y][x] === 1) {
+			db.ships[index].matrix[y][x] = 2;
+			console.log(db.ships[index].matrix);
+
+			if (checkSurroundingCells(db.ships[index].matrix, x, y)) {
+				status = 'killed';
+				secondShot = true;
+			} else {
+				status = 'shot';
+				secondShot = true;
+			}
 			break;
+		} else {
+			status = 'miss';
 		}
-	}
-
-	if (shipHit) {
-		status = shipHit.length === 1 ? 'killed' : 'shot';
-	} else {
-		status = 'miss';
 	}
 
 	const feedback: AttackFeedbackData = {
@@ -93,13 +125,20 @@ export const handleAttack = (data: AttackData, ws: WebSocket): void => {
 		players.map((player) => {
 			player.ws.send(JSON.stringify({ type: 'attack', data: JSON.stringify(feedback), id: 0 }));
 		});
+
+	handleTurn(data, secondShot);
 };
 
-export const handleTurn = (data: Ships): void => {
+export const handlerRandomAttack = (data: RandomAttackData, ws: WebSocket): void => {
+	console.log(data);
+};
+
+export const handleTurn = (data: AttackData, secondShot: boolean = false): void => {
 	const { indexPlayer } = data;
+	console.log('🚀 ~ handleTurn ~ indexPlayer:', indexPlayer);
 	const players = checkIfBothPlayersHaveShips(data.gameId);
 	let anotherPlayer: Ships[] | undefined;
-	if (players) {
+	if (players && !secondShot) {
 		anotherPlayer = players.filter((player) => player.indexPlayer !== indexPlayer);
 	}
 
@@ -108,11 +147,12 @@ export const handleTurn = (data: Ships): void => {
 			const responseData = {
 				type: 'turn',
 				data: JSON.stringify({
-					currentPlayer: anotherPlayer![0].indexPlayer,
+					currentPlayer: anotherPlayer![0].indexPlayer || indexPlayer,
 				}),
 				id: 0,
 			};
 			const response = JSON.stringify(responseData);
+			console.log(responseData.data);
 			player.ws.send(response);
 		});
 };
