@@ -25,9 +25,6 @@ export const addShips = (data: Ships, ws: WebSocket): void => {
 	const players = checkIfBothPlayersHaveShips(gameId);
 	if (players)
 		players.map((player) => handleGameStart(player.ships, player.indexPlayer, player.ws as any));
-
-	console.log(createMatrix(data));
-	console.log(db);
 };
 
 export const getShipsByGameId = (gameId: number): Ships[] => {

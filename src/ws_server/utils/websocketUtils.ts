@@ -64,6 +64,5 @@ export const handleWebSocketConnection = (ws: WebSocket): void => {
 			deleteRoomByPlayerId(connection?.playerId);
 			handleRoomUpdate();
 		}
-		console.log(db);
 	});
 };

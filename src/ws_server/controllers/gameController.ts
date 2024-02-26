@@ -86,6 +86,8 @@ const checkSurroundingCells = (matrix: number[][], x: number, y: number): boolea
 	return true;
 };
 
+let lastKilledShip: { x: number; y: number; index: number } | null = null;
+
 const sendMissToServer = (x: number, y: number, currentPlayer: number, ws: WebSocket): void => {
 	const feedback: AttackFeedbackData = {
 		position: { x, y },
@@ -100,6 +102,7 @@ const markCellsAroundKilledShipAsMiss = (
 	matrix: number[][],
 	indexPlayer: number,
 	ws: WebSocket,
+	lastKilledShip: { x: number; y: number },
 ): void => {
 	const directions = [
 		[-1, -1],
@@ -112,24 +115,21 @@ const markCellsAroundKilledShipAsMiss = (
 		[1, 1],
 	];
 
-	for (let y = 0; y < matrix.length; y++) {
-		for (let x = 0; x < matrix[0].length; x++) {
-			if (matrix[y][x] === 2) {
-				for (const [dx, dy] of directions) {
-					const newX = x + dx;
-					const newY = y + dy;
+	const { x, y } = lastKilledShip;
+	if (matrix[y][x] === 2) {
+		for (const [dx, dy] of directions) {
+			const newX = x + dx;
+			const newY = y + dy;
 
-					if (
-						newX >= 0 &&
-						newX < matrix[0].length &&
-						newY >= 0 &&
-						newY < matrix.length &&
-						matrix[newY][newX] !== 2
-					) {
-						matrix[newY][newX] = 0;
-						sendMissToServer(newX, newY, indexPlayer, ws);
-					}
-				}
+			if (
+				newX >= 0 &&
+				newX < matrix[0].length &&
+				newY >= 0 &&
+				newY < matrix.length &&
+				matrix[newY][newX] !== 2
+			) {
+				matrix[newY][newX] = 0;
+				sendMissToServer(newX, newY, indexPlayer, ws);
 			}
 		}
 	}
@@ -149,12 +149,11 @@ export const handleAttack = (data: AttackData, ws: WebSocket): void => {
 		const { x, y } = data;
 		if (ship.matrix[y][x] === 1) {
 			db.ships[index].matrix[y][x] = 2;
-			console.log(db.ships[index].matrix);
 
 			if (checkSurroundingCells(db.ships[index].matrix, x, y)) {
 				status = 'killed';
 				secondShot = true;
-				markCellsAroundKilledShipAsMiss(db.ships[index].matrix, data.indexPlayer, ws);
+				lastKilledShip = { x, y, index };
 			} else {
 				status = 'shot';
 				secondShot = true;
@@ -163,6 +162,15 @@ export const handleAttack = (data: AttackData, ws: WebSocket): void => {
 		} else {
 			status = 'miss';
 		}
+	}
+
+	if (status === 'killed' && lastKilledShip) {
+		markCellsAroundKilledShipAsMiss(
+			db.ships[lastKilledShip.index].matrix,
+			data.indexPlayer,
+			ws,
+			lastKilledShip,
+		);
 	}
 
 	const feedback: AttackFeedbackData = {
@@ -185,7 +193,6 @@ export const handlerRandomAttack = (data: RandomAttackData, ws: WebSocket): void
 
 export const handleTurn = (data: AttackData, secondShot: boolean = false): void => {
 	const { indexPlayer } = data;
-	console.log('🚀 ~ handleTurn ~ indexPlayer:', indexPlayer);
 	const players = checkIfBothPlayersHaveShips(data.gameId);
 	let anotherPlayer: Ships[] | undefined;
 	if (players && !secondShot) {
@@ -202,7 +209,6 @@ export const handleTurn = (data: AttackData, secondShot: boolean = false): void 
 				id: 0,
 			};
 			const response = JSON.stringify(responseData);
-			console.log(responseData.data);
 			player.ws.send(response);
 		});
 };
