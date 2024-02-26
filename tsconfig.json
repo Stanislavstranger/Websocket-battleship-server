@@ -1,0 +1,26 @@
+{
+	"compilerOptions": {
+		"target": "ES2018",
+		"module": "ES6",
+		"strict": true,
+		"noImplicitAny": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"moduleResolution": "Node",
+		"isolatedModules": true,
+		"allowSyntheticDefaultImports": true,
+		"baseUrl": "./",
+		"paths": {
+			"*": ["node_modules/*", "src/types/*"]
+		}
+	},
+	"ts-node": {
+		"compilerOptions": {
+			"module": "CommonJS"
+		}
+	},
+	"include": ["**/*.ts"],
+	"exclude": ["node_modules"]
+}

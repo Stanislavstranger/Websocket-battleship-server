@@ -1,0 +1,27 @@
+# dependencies
+/node_modules
+
+# System Files
+.DS_Store
+Thumbs.db
+[Dd]esktop.ini
+
+# Links
+*.lnk
+.idea/
+*.PEM
+.vscode/
+
+# Logs
+npm-debug.log
+
+# production
+/build
+/dist
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# eslint
+.eslintcache
