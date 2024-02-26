@@ -5,6 +5,7 @@ import { createGame } from '../services/gameService';
 import { AttackData, AttackFeedbackData, RandomAttackData, Ships } from '../models/models';
 import {
 	checkIfBothPlayersHaveShips,
+	getShipsByGameId,
 	getShipsByGameIdAndByPlayerId,
 } from '../services/shipService';
 import { getRandomNumber } from '../utils/getRandomNumber';
@@ -59,6 +60,21 @@ export const handleGameStart = (
 	};
 	const response = JSON.stringify(responseData);
 	ws.send(response);
+};
+
+export const handleFinish = (gameId: number, ws: WebSocket, winPlayer: number): void => {
+	const players = getShipsByGameId(gameId);
+	players.map((player) => {
+		const responseData = {
+			type: 'finish',
+			data: JSON.stringify({
+				winPlayer,
+			}),
+			id: 0,
+		};
+		const response = JSON.stringify(responseData);
+		player.ws.send(response);
+	});
 };
 
 const checkSurroundingCells = (matrix: number[][], x: number, y: number): boolean => {
@@ -150,6 +166,9 @@ export const handleAttack = (data: AttackData, ws: WebSocket): void => {
 		const { x, y } = data;
 		if (ship.matrix[y][x] === 1) {
 			db.ships[index].matrix[y][x] = 2;
+			++db.ships[index].isFinish! === 20
+				? handleFinish(data.gameId, ws, data.indexPlayer)
+				: undefined;
 
 			if (checkSurroundingCells(db.ships[index].matrix, x, y)) {
 				status = 'killed';

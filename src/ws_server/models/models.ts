@@ -47,6 +47,7 @@ export interface Ships {
 	matrix: number[][];
 	indexPlayer: number;
 	ws: WebSocket;
+	isFinish?: number;
 }
 
 export interface Connections {

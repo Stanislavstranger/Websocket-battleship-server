@@ -19,6 +19,7 @@ export const addShips = (data: Ships, ws: WebSocket): void => {
 		matrix: createMatrix(data),
 		indexPlayer,
 		ws,
+		isFinish: 0,
 	};
 	db.ships.push(shipData);
 
