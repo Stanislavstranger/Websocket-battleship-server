@@ -27,7 +27,6 @@ export const addPlayerToRoom = (roomId: { indexRoom: number }, ws: WebSocket): v
 			delete playerCreatedRooms[player.playerId];
 		}
 		room.players.push(player.playerId);
-		console.log(db.rooms);
 	}
 };
 

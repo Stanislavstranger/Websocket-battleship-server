@@ -7,6 +7,7 @@ import {
 	checkIfBothPlayersHaveShips,
 	getShipsByGameIdAndByPlayerId,
 } from '../services/shipService';
+import { getRandomNumber } from '../utils/getRandomNumber';
 
 export const handleGameCreation = (): void => {
 	const roomsWithTwoPlayer = db.rooms.filter((room) => room.players.length === 2);
@@ -188,7 +189,16 @@ export const handleAttack = (data: AttackData, ws: WebSocket): void => {
 };
 
 export const handlerRandomAttack = (data: RandomAttackData, ws: WebSocket): void => {
-	console.log(data);
+	const x = getRandomNumber();
+	const y = getRandomNumber();
+	const { gameId, indexPlayer } = data;
+	const dataForAttack: AttackData = {
+		x,
+		y,
+		gameId,
+		indexPlayer,
+	};
+	handleAttack(dataForAttack, ws);
 };
 
 export const handleTurn = (data: AttackData, secondShot: boolean = false): void => {
@@ -201,10 +211,14 @@ export const handleTurn = (data: AttackData, secondShot: boolean = false): void 
 
 	if (players)
 		players.map((player) => {
+			let currentPlayer = indexPlayer;
+			if (anotherPlayer && anotherPlayer.length > 0) {
+				currentPlayer = anotherPlayer[0].indexPlayer;
+			}
 			const responseData = {
 				type: 'turn',
 				data: JSON.stringify({
-					currentPlayer: anotherPlayer![0].indexPlayer || indexPlayer,
+					currentPlayer: currentPlayer,
 				}),
 				id: 0,
 			};

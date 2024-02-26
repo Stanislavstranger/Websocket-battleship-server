@@ -41,11 +41,9 @@ export const handleWebSocketConnection = (ws: WebSocket): void => {
 					break;
 				case 'attack':
 					handleAttack(JSON.parse(parsedMessage.data), ws);
-					handleTurn(JSON.parse(parsedMessage.data));
 					break;
 				case 'randomAttack':
 					handlerRandomAttack(JSON.parse(parsedMessage.data), ws);
-					handleTurn(JSON.parse(parsedMessage.data));
 					break;
 				default:
 					console.log('❗ Unknown command type'.red.bgWhite);
